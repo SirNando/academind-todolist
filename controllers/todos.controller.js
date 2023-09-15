@@ -35,9 +35,39 @@ async function addTodo(req, res, next) {
     });
 }
 
-function updateTodos() {}
+async function updateTodos(req, res, next) {
+    const todoId = req.params.id;
+    const newTodoText = req.body.newText;
 
-function deleteTodo() {}
+    const todo = new Todo(newTodoText, todoId);
+
+    try {
+        await todo.save();
+    } catch(error) {
+        next(error);
+    }
+
+    res.json({
+        message: "Todo updated",
+        updatedTodo: todo
+    });
+}
+
+async function deleteTodo(req, res, next) {
+    const todoId = req.params.id;
+
+    const todo = new Todo(null, todoId);
+
+    try {
+        await todo.delete();
+    } catch(error) {
+        next(error);
+    }
+
+    res.json({
+        message: "Todo deleted"
+    });
+}
 
 module.exports = {
     getAllTodos,
